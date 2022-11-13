@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
-vector<char>black;
-vector<pair<char,int>>yellow,green;
+vector<char>black,yellow;
+vector<pair<char,int>>green;
 class word
 {
     private:
@@ -16,6 +16,7 @@ class word
             printf("\n");
         }
         word operator + (word b);
+        word operator * (word b);
         friend bool operator < (word a, word b)
         {
             for(int i=0;i<a.x.size();i++)
@@ -68,6 +69,30 @@ word word::operator + (word b)
     temp.x=ans;
     return temp;
 }
+word word::operator * (word b)
+{
+    word temp;
+    map<int,int>m_good,m_check;
+    string ans="BBBBB",good_word=x,check_word=b.x;
+    for(int i=0; i<good_word.size(); i++)
+        if(good_word[i]==check_word[i])
+        {
+            ans[i]='G';
+            good_word[i]=check_word[i]='0';
+        }
+    for(int i=0;i<check_word.size();i++)
+        if(check_word[i]!='0')
+        {
+            for(int j=0;j<good_word.size();j++)
+                if(check_word[i]==good_word[j])
+                {
+                    ans[i]='Y';
+                    break;
+                }
+        }
+    temp.x=ans;
+    return temp;
+}
 bool word::good(const word)
 {
     string check_word=x;
@@ -80,20 +105,16 @@ bool word::good(const word)
         for(int j=0; j<check_word.size(); j++)
             if(black[i]==check_word[j])
                 return 0;
-    map<char,vector<int>>m;
-    for(int i=0; i<check_word.size(); i++)
-        if(check_word[i]!='0')
-            m[check_word[i]].push_back(i);
-    for(int i=0;i<yellow.size();i++)
+    for(int i=0; i<yellow.size(); i++)
     {
-        if(m.find(yellow[i].first)==m.end())
-            return 0;
-        else//stiu ca n-are sens dar e ca sa inteleg eu mai usor codul
-        {
-            for(int j=0;j<m[yellow[i].first].size();j++)
-                if(m[yellow[i].first][j]==yellow[i].second)
-                    return 0;
-        }
+        int ok=0;
+        for(int j=0; j<check_word.size(); j++)
+            if(yellow[i]==check_word[j])
+            {
+                ok=1;
+                break;                
+            }
+        if(ok==0) return 0;
     }
     return 1;
 }

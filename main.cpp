@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-#include"player.cpp"
+#include"bot.cpp"
 using namespace std;
 int main()
 {
@@ -14,6 +14,11 @@ int main()
             else break;
     }
     getchar();
-    start_game_player();
+    switch (GAMEMODE)
+    {
+        case 1: start_game_player();
+        case 2: start_game_bot();
+        default: printf("FATAL ERROR OCCURED... WE ARE SORRY");
+    }
     return 0;
 }
