@@ -1,4 +1,3 @@
-#include<bits/stdc++.h>
 #include"structures.cpp"
 using namespace std;
 word user_input;

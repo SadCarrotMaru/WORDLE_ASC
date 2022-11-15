@@ -4,9 +4,8 @@ vector<char>black,yellow;
 vector<pair<char,int>>green;
 class word
 {
-    private:
-        string x;
     public:
+        string x;
         word();
         word(string a);
         void print() const
@@ -29,7 +28,7 @@ class word
             if(a.x==b.x) return true;
             return false;
         }
-        bool good(const word);
+        bool good() const;
 };
 word::word()
 {
@@ -93,7 +92,7 @@ word word::operator * (word b)
     temp.x=ans;
     return temp;
 }
-bool word::good(const word)
+bool word::good() const
 {
     string check_word=x;
     for(int i=0; i<green.size(); i++)
