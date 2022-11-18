@@ -1,87 +1,102 @@
 #include"player.cpp"
 using namespace std;
-string config="     ";
 word currentword;
-word savedword;
+word savedword("TAREI");
 double ENTROPY,MAXENTROPY=0;
 const double eps=0.e-14;
-int NUMBER=0;
-void add_hints(word verifiedword, string feedback, vector<char> &negru, vector<char> &galben, vector<pair<char,int>> &verde)
+void update_database()
 {
-    for(int i=0;i<feedback.size();i++)
+    word feedback;
+    feedback = savedword * chosen_word;
+    vector<word>m2;
+    m2.clear();
+    for(auto &x : m)
     {
-        switch(feedback[i])
-        {
-            case 'Y':
-            {
-                int ok=0;
-                for(int j=0;j<galben.size();j++)
-                    if(galben[j]==verifiedword.x[i]) ok=1;
-                if(ok==0) galben.push_back(verifiedword.x[i]);
-                break;
-            }
-            case 'B':
-            {
-                int ok=0;
-                for(int j=0;j<negru.size();j++)
-                    if(negru[j]==verifiedword.x[i]) ok=1;
-                if(ok==0) negru.push_back(verifiedword.x[i]);
-                break;
-            }
-            default:
-                verde.push_back(make_pair(verifiedword.x[i],i));
-        }
+        if(x.good(savedword,feedback))
+            m2.push_back(x);
     }
-} 
+    m.clear();
+    m=m2;
+}
+// ABACA   ->  ATARE  -> GBGBB
 void do_entropy()
 {
-    vector<char>blackcopy(black),yellowcopy(yellow);
-    vector<pair<char,int>>greencopy(green);
-    add_hints(currentword,config,black,yellow,green);
-    map<word,bool>:: iterator it2 = m.begin();
-    int count=0;
-    for(;it2!=m.end();it2++)
-        if((*it2).second==1) if((*it2).first.good()==1) count++;
+    int frecv[250] = {0};
+    // B - > 1, Y -> 2, G -> 3- > 31311
+    int count=0,number;
+    for(auto &x: m)
+    {
+        word config;
+        config = currentword * x;
+        number = config.get_number();
+        frecv[number]++;
+    }
+    double P=1;
+    for(int i=0;i<=243;i++)
+    {
+        if(frecv[i])
+        {
+            P = frecv[i] / (1.0*m.size());
+            double logP = double(log2(1/P));
+            ENTROPY += P * logP;
+        }
+    }
+    /*
     double P = double((1.0*count)/(1.0*m.size()));
     if(P!=0)
     {
-    double log = double(log2(1/P));
-    ENTROPY += P * log;
+    double logP = double(log2(1/P));
+    ENTROPY += P * logP;
     }
-    green.assign(greencopy.begin(),greencopy.end());
-    yellow.assign(yellowcopy.begin(),yellowcopy.end());
-    black.assign(blackcopy.begin(),blackcopy.end());
-    /// Copy structures
-    /// Modify original ones -- ai grija la asta
-    /// Test for each element and obtain value for 1 configuration
+    */
 }
+/*
 void backtracking(int k)
 {
     if(k==5) {do_entropy(); return;}
     config[k]='B'; backtracking(k+1);
     config[k]='G'; backtracking(k+1);
     config[k]='Y'; backtracking(k+1);
-   // printf("%d\n",k);
     return;
+}
+*/
+void chosen_word_by_bot(word choice)
+{
+    update_database();
+    printf("Entropy: %lf found with the word:\n",MAXENTROPY);
+    choice.print();
+    /// ANIMATION PYTHON
+
+}
+void debug()
+{
+    word a("ABATA");
+    word b("MAMTE");
+    word c("BYBBB");
+    printf("%d ",a.good(b,c));
 }
 void start_game_bot()
 {
-    map<word,bool>:: iterator it = m.begin(),it3=m.begin();
-    advance(it3,20);
-    for( ;it!=it3;it++)
+    debug();
+    update_database();
+    while(m.size())
     {
-        currentword = (*it).first;
-        ENTROPY = 0;
-        config="     ";
-        NUMBER=0;
-        backtracking(0);
-        if(ENTROPY-MAXENTROPY>eps)
+        MAXENTROPY=0;
+        printf("%d  ",m.size());
+        for(auto currentword : m)
         {
-            MAXENTROPY=ENTROPY;
-            savedword=currentword;
+            ENTROPY = 0;
+            do_entropy();
+            if(ENTROPY-MAXENTROPY>eps)
+            {
+                MAXENTROPY=ENTROPY;
+                savedword=currentword;
+            }
         }
-        /// Obtain entropy level, save word if maximum case;
+        if(savedword==chosen_word)
+        {
+            printf("YOU WON\n");        
+        }   
+        chosen_word_by_bot(savedword);
     }
-    savedword.print();
-    printf("%d: %lf\n",NUMBER,MAXENTROPY);
 }

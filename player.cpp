@@ -1,6 +1,7 @@
 #include"structures.cpp"
 using namespace std;
 word user_input;
+word good("GGGGG");
 void get_user_input()
 {
     printf("Enter your guess:\n");
@@ -11,7 +12,7 @@ void get_user_input()
         if(s.size()==5)
         {
             word input(s);
-            if(m.find(input)!=m.end())
+            if(find(input))
             {
                 user_input=input;
                 break;
@@ -22,7 +23,6 @@ void get_user_input()
 }
 void start_game_player()
 {
-    word good("GGGGG");
     while(1)
     {
         get_user_input();

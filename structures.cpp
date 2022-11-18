@@ -1,7 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-vector<char>black,yellow;
-vector<pair<char,int>>green;
 class word
 {
     public:
@@ -28,7 +26,20 @@ class word
             if(a.x==b.x) return true;
             return false;
         }
-        bool good() const;
+        bool good(word a, word b) const;
+        int get_number()
+        {
+            int digit,number,power=1;
+            for(int i=0;i<x.size();i++)
+            {
+                if(x[i]=='G') digit=0;
+                    else if(x[i]=='Y') digit=1;
+                        else digit=2;
+                number+=power*digit;
+                power*=3; 
+            }
+            return number;
+        }
 };
 word::word()
 {
@@ -92,32 +103,36 @@ word word::operator * (word b)
     temp.x=ans;
     return temp;
 }
-bool word::good() const
+bool word::good(word a, word b) const
 {
-    string check_word=x;
-    for(int i=0; i<green.size(); i++)
-        if(check_word[green[i].second]!=green[i].first)
-            return 0;
-        else
-            check_word[green[i].second]='0';
-    for(int i=0; i<black.size(); i++)
-        for(int j=0; j<check_word.size(); j++)
-            if(black[i]==check_word[j])
-                return 0;
-    for(int i=0; i<yellow.size(); i++)
+    for(int i=0;i<5;i++)
     {
-        int ok=0;
-        for(int j=0; j<check_word.size(); j++)
-            if(yellow[i]==check_word[j])
+        switch(b.x[i])
+        {
+            case 'G':
             {
-                ok=1;
-                break;                
+                if(x[i]!=a.x[i]) return 0;
+                break;
             }
-        if(ok==0) return 0;
+            case 'B':
+            {
+                for(int j=0;j<5;j++)
+                    if(x[j]==a.x[i]) return 0;
+                break;
+            }
+            default:
+            {
+                bool ok=0;
+                for(int j=0;j<5;j++)
+                    if(x[j]==a.x[i]) ok=1;
+                if(ok==0) return 0;
+                break;
+            }
+        }
     }
     return 1;
 }
-map<word,bool>m;
+vector<word>m;
 void create_database()
 {
     string path = __FILE__; //gets source code path, include file name
@@ -129,8 +144,9 @@ void create_database()
     while(getline(file1,s))
     {
         word ins(s);
-        m.insert(pair<word,bool>(ins,1));
+        m.push_back(ins);
     }
+    printf("%d\n",m.size());
     file1.close();
 }
 word chosen_word;
@@ -155,8 +171,17 @@ void get_word()
 {
     map<word,bool>::iterator it;
     int pos = random();
-    it = m.begin();
-    advance(it, pos);
-    (*it) . second = 0;
-    chosen_word = (*it).first;
+    chosen_word = m[pos];
+}
+bool find(word a)
+{
+    int st=0,dr=m.size()-1;
+    while(st<=dr)
+    {
+        int med=(st+dr)>>1;
+        if(m[med]==a) return 1;
+            else if(m[med].x<a.x) st=med+1;
+                else dr=med-1;
+    }
+    return 0;
 }
