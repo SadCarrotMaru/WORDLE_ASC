@@ -2,23 +2,25 @@
 using namespace std;
 word currentword;
 word savedword("TAREI");
-double ENTROPY,MAXENTROPY=0;
+double ENTROPY,MAXENTROPY=0,SUM=0;
 const double eps=0.e-14;
+int countg;
+map<word,bool>vizitat;
 void update_database()
 {
+    // TRANSMIT SAVEDWORD TO PY INTERFACE TO TEST IT
     word feedback;
-    feedback = savedword * chosen_word;
+    feedback = chosen_word * savedword;
     vector<word>m2;
     m2.clear();
     for(auto &x : m)
     {
-        if(x.good(savedword,feedback))
+        if(x.good(savedword,feedback) && !(x==savedword))
             m2.push_back(x);
     }
     m.clear();
     m=m2;
 }
-// ABACA   ->  ATARE  -> GBGBB
 void do_entropy()
 {
     int frecv[250] = {0};
@@ -27,7 +29,7 @@ void do_entropy()
     for(auto &x: m)
     {
         word config;
-        config = currentword * x;
+        config = x * currentword;
         number = config.get_number();
         frecv[number]++;
     }
@@ -41,62 +43,54 @@ void do_entropy()
             ENTROPY += P * logP;
         }
     }
-    /*
-    double P = double((1.0*count)/(1.0*m.size()));
-    if(P!=0)
-    {
-    double logP = double(log2(1/P));
-    ENTROPY += P * logP;
-    }
-    */
 }
-/*
-void backtracking(int k)
-{
-    if(k==5) {do_entropy(); return;}
-    config[k]='B'; backtracking(k+1);
-    config[k]='G'; backtracking(k+1);
-    config[k]='Y'; backtracking(k+1);
-    return;
-}
-*/
 void chosen_word_by_bot(word choice)
 {
+    vizitat.insert(make_pair(savedword,1));
     update_database();
-    printf("Entropy: %lf found with the word:\n",MAXENTROPY);
+    countg++;
     choice.print();
-    /// ANIMATION PYTHON
+    af << ", ";
+    // TRANSMIT WORD TO BOT
 
-}
-void debug()
-{
-    word a("ABATA");
-    word b("MAMTE");
-    word c("BYBBB");
-    printf("%d ",a.good(b,c));
 }
 void start_game_bot()
 {
-    debug();
-    update_database();
+    //debug();
+    vizitat.clear();
+    savedword.x = "TAREI";
+    countg = 0;
+    chosen_word.print();
+    af << "  -->  ";
+    chosen_word_by_bot(savedword);
     while(m.size())
     {
-        MAXENTROPY=0;
-        printf("%d  ",m.size());
-        for(auto currentword : m)
+        MAXENTROPY=-1;
+        bool ok = false;
+        if(m.size()==1)
+            {chosen_word_by_bot(m.front()); break;}
+        else
         {
-            ENTROPY = 0;
-            do_entropy();
-            if(ENTROPY-MAXENTROPY>eps)
+            for(auto &y : full_database)
             {
-                MAXENTROPY=ENTROPY;
-                savedword=currentword;
+                if(vizitat.find(y)==vizitat.end())
+                {
+                    currentword = y;
+                    ENTROPY = 0;
+                    do_entropy();
+                    if(ENTROPY-MAXENTROPY>eps)
+                    {
+                        MAXENTROPY=ENTROPY;
+                        savedword=currentword;
+                        ok = true;
+                    }
+                }
             }
+            if(ok==true) chosen_word_by_bot(savedword);
         }
-        if(savedword==chosen_word)
-        {
-            printf("YOU WON\n");        
-        }   
-        chosen_word_by_bot(savedword);
     }
+    af << countg << '\n';
+    //printf("%d \n",countg);
+    SUM += countg;
+    //af.close();
 }

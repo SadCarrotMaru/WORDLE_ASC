@@ -22,7 +22,19 @@ int main()
         }
         case 2: 
         {
-            start_game_bot();
+            m.pop_back();
+            vector<word>zz(m);
+            open_file();
+            af.flush();
+            for(auto &z:zz)
+            {
+                m=zz;
+                chosen_word=z;
+                start_game_bot();
+            }
+            af << "Medie incercari: " << 1.0*SUM / zz.size();
+            af.close();
+            af.flush();
             break;
         }
         default: printf("FATAL ERROR OCCURED... WE ARE SORRY");

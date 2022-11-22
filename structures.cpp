@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
+ofstream af;
 class word
 {
     public:
@@ -9,8 +10,7 @@ class word
         void print() const
         {
             for(int i=0;i<x.size();i++)
-                printf("%c",x[i]);
-            printf("\n");
+               af << x[i];
         }
         word operator + (word b);
         word operator * (word b);
@@ -29,7 +29,7 @@ class word
         bool good(word a, word b) const;
         int get_number()
         {
-            int digit,number,power=1;
+            int digit,number=0,power=1;
             for(int i=0;i<x.size();i++)
             {
                 if(x[i]=='G') digit=0;
@@ -41,6 +41,13 @@ class word
             return number;
         }
 };
+void open_file()
+{
+    string path = __FILE__; //gets source code path, include file name
+	path = path.substr(0, 1 + path.find_last_of('\\')); //removes file name
+	path += "solutii2.txt"; //adds input file to path
+    af.open(path);
+}
 word::word()
 {
     x="";
@@ -82,16 +89,12 @@ word word::operator + (word b)
 word word::operator * (word b)
 {
     word temp;
-    map<int,int>m_good,m_check;
     string ans="BBBBB",good_word=x,check_word=b.x;
     for(int i=0; i<good_word.size(); i++)
         if(good_word[i]==check_word[i])
-        {
             ans[i]='G';
-            good_word[i]=check_word[i]='0';
-        }
     for(int i=0;i<check_word.size();i++)
-        if(check_word[i]!='0')
+        if(ans[i]!='G')
         {
             for(int j=0;j<good_word.size();j++)
                 if(check_word[i]==good_word[j])
@@ -132,7 +135,7 @@ bool word::good(word a, word b) const
     }
     return 1;
 }
-vector<word>m;
+vector<word>m,full_database;
 void create_database()
 {
     string path = __FILE__; //gets source code path, include file name
@@ -145,8 +148,9 @@ void create_database()
     {
         word ins(s);
         m.push_back(ins);
+        full_database.push_back(ins);
     }
-    printf("%d\n",m.size());
+    //printf("%d\n",m.size());
     file1.close();
 }
 word chosen_word;
@@ -172,6 +176,8 @@ void get_word()
     map<word,bool>::iterator it;
     int pos = random();
     chosen_word = m[pos];
+    //word aj("LEVIT");
+    //chosen_word=aj;
 }
 bool find(word a)
 {
