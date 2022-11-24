@@ -34,7 +34,7 @@ int main()
             }
             af << "Medie incercari: " << 1.0*SUM / zz.size();
             af.close();
-            af.flush();
+            //af.flush();
             break;
         }
         default: printf("FATAL ERROR OCCURED... WE ARE SORRY");

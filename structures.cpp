@@ -127,7 +127,7 @@ bool word::good(word a, word b) const
             {
                 bool ok=0;
                 for(int j=0;j<5;j++)
-                    if(x[j]==a.x[i]) ok=1;
+                    if(x[j]==a.x[i] && j!=i) ok=1;
                 if(ok==0) return 0;
                 break;
             }

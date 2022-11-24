@@ -23,7 +23,9 @@ void update_database()
 }
 void do_entropy()
 {
-    int frecv[250] = {0};
+    int frecv[250];
+    for(int i=0;i<=243;i++)
+        frecv[i]=0;
     // B - > 1, Y -> 2, G -> 3- > 31311
     int count=0,number;
     for(auto &x: m)
@@ -34,12 +36,13 @@ void do_entropy()
         frecv[number]++;
     }
     double P=1;
+    ENTROPY=0;
     for(int i=0;i<=243;i++)
     {
         if(frecv[i])
         {
-            P = frecv[i] / (1.0*m.size());
-            double logP = double(log2(1/P));
+            P = frecv[i] / (double)m.size();
+            double logP = -log2(P);
             ENTROPY += P * logP;
         }
     }
@@ -50,6 +53,7 @@ void chosen_word_by_bot(word choice)
     update_database();
     countg++;
     choice.print();
+    //af << "(" << MAXENTROPY <<", "<<m.size()<< "), ";
     af << ", ";
     // TRANSMIT WORD TO BOT
 
@@ -65,29 +69,27 @@ void start_game_bot()
     chosen_word_by_bot(savedword);
     while(m.size())
     {
-        MAXENTROPY=-1;
         bool ok = false;
-        if(m.size()==1)
-            {chosen_word_by_bot(m.front()); break;}
-        else
+        ENTROPY = 0;
+        currentword = m.front();
+        savedword = m.front();
+        do_entropy();
+        af << '\n' << ENTROPY << '\n';
+        MAXENTROPY=ENTROPY;
+        for(auto &y : full_database)
         {
-            for(auto &y : full_database)
+            if(vizitat.find(y)==vizitat.end())
             {
-                if(vizitat.find(y)==vizitat.end())
+                currentword = y;
+                do_entropy();
+                if(ENTROPY>MAXENTROPY)
                 {
-                    currentword = y;
-                    ENTROPY = 0;
-                    do_entropy();
-                    if(ENTROPY-MAXENTROPY>eps)
-                    {
-                        MAXENTROPY=ENTROPY;
-                        savedword=currentword;
-                        ok = true;
-                    }
+                   MAXENTROPY=ENTROPY;
+                   savedword=currentword;
                 }
-            }
-            if(ok==true) chosen_word_by_bot(savedword);
+              }
         }
+        chosen_word_by_bot(savedword);
     }
     af << countg << '\n';
     //printf("%d \n",countg);
