@@ -53,8 +53,8 @@ void chosen_word_by_bot(word choice)
     update_database();
     countg++;
     choice.print();
-    //af << "(" << MAXENTROPY <<", "<<m.size()<< "), ";
-    af << ", ";
+    cout << "(" << MAXENTROPY <<", "<<m.size()<< "), ";
+    //af << ", ";
     // TRANSMIT WORD TO BOT
 
 }
@@ -65,7 +65,7 @@ void start_game_bot()
     savedword.x = "TAREI";
     countg = 0;
     chosen_word.print();
-    af << "  -->  ";
+    cout << "  -->  ";
     chosen_word_by_bot(savedword);
     while(m.size())
     {
@@ -74,8 +74,8 @@ void start_game_bot()
         currentword = m.front();
         savedword = m.front();
         do_entropy();
-        af << '\n' << ENTROPY << '\n';
         MAXENTROPY=ENTROPY;
+        cout<< "~~~" << MAXENTROPY << "~~~";
         for(auto &y : full_database)
         {
             if(vizitat.find(y)==vizitat.end())
@@ -91,7 +91,7 @@ void start_game_bot()
         }
         chosen_word_by_bot(savedword);
     }
-    af << countg << '\n';
+    cout << countg << '\n';
     //printf("%d \n",countg);
     SUM += countg;
     //af.close();

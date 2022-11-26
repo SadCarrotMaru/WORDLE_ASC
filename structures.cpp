@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-ofstream af;
+FILE *f;
 class word
 {
     public:
@@ -10,7 +10,7 @@ class word
         void print() const
         {
             for(int i=0;i<x.size();i++)
-               af << x[i];
+               cout << x[i];
         }
         word operator + (word b);
         word operator * (word b);
@@ -45,8 +45,8 @@ void open_file()
 {
     string path = __FILE__; //gets source code path, include file name
 	path = path.substr(0, 1 + path.find_last_of('\\')); //removes file name
-	path += "solutii2.txt"; //adds input file to path
-    af.open(path);
+	path += "solutii3.txt"; //adds input file to path
+    f = fopen("solutii3.txt","w");    
 }
 word::word()
 {
