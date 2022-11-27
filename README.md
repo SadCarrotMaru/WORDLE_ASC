@@ -5,6 +5,7 @@ Membrii echipă: <br />
   ~ Pîrvulescu Daria Maria  <br />
   ~ Buzatu Giulian  <br />
 Medie încercări: 4.00786  <br />
+Pentru a juca, se executa wordle.py. <br />
 
 Conținut proiect: <br />
   Proiectul nostru contine 2 programe principale:   <br />
