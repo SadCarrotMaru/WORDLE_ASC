@@ -17,7 +17,7 @@ Conținut proiect: <br />
             ~ pentru calculul entropiei, retinem doua structuri, m si full_database. (m este lista care contine cuvintele care inca pot fi castigatoare, iar full_database contine toate cuvintele din fisier) <br />
             ~ pentru fiecare cuvant din full_database calculam entropia (deoarece un cuvant care nu poate fi castigator poate avea o entropie mai mare), folosindu-ne de configuratiile care rezulta daca ele ar fi jucate <br />
 
-Imagini proiect:
+Imagini proiect: <br />
 ![image](https://user-images.githubusercontent.com/85646597/204155465-b7347f5b-6f70-409d-aacf-c49f5a9c7241.png)
 ![image](https://user-images.githubusercontent.com/85646597/204155472-89a259cc-e2f0-4511-b840-249f82c36a82.png)
 ![image](https://user-images.githubusercontent.com/85646597/204155477-43bd4b44-5538-47f7-b0fa-07e936837120.png)
