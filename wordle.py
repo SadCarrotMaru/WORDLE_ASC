@@ -4,6 +4,7 @@ import sys          # ca sa inchidem procesul
 import random       # sa genereze cuvant random
 import os
 import time
+import subprocess
 #from words import * # lista lui de cuvinte, o modificam noi cand combinam
 pygame.init()       # initializezi aplicatia
 # Constants
@@ -312,10 +313,8 @@ def robot():
             for letter in guess:
                 str += letter.text
         fp.write(str)
-    mypath = os.path.abspath(os.path.dirname(__file__))
-    print(f'"{mypath}/bot.exe"')
-    os.startfile( f'"{mypath}/bot.exe"' )
-    time.sleep(5)
+    process = subprocess.Popen(["bot.exe"])
+    process.wait()
     with open(os.path.join(directory, file2), 'r') as fp:
         line = fp.readline().strip()
         for ch in line:
@@ -344,8 +343,6 @@ while True:
             elif event.key == pygame.K_BACKSPACE:
                 if len(current_guess_string) > 0:
                     delete_letter()
-            elif event.key == pygame.K_SPACE:
-                pyautogui.moveTo(100, 100, duration = 2)
             elif event.key == pygame.K_UP:
                 if start_ind_scroll !=0:
                         start_ind_scroll = start_ind_scroll - 1
