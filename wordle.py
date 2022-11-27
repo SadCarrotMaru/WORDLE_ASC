@@ -344,6 +344,8 @@ while True:
             elif event.key == pygame.K_BACKSPACE:
                 if len(current_guess_string) > 0:
                     delete_letter()
+            elif event.key == pygame.K_SPACE:
+                robot()
             elif event.key == pygame.K_UP:
                 if start_ind_scroll !=0:
                         start_ind_scroll = start_ind_scroll - 1
