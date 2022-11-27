@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
-FILE *f;
+char answers_by_bot[105];
+int count1=0;
 class word
 {
     public:
@@ -10,7 +11,7 @@ class word
         void print() const
         {
             for(int i=0;i<x.size();i++)
-               cout << x[i];
+               answers_by_bot[++count1]=x[i];
         }
         word operator + (word b);
         word operator * (word b);
@@ -41,13 +42,6 @@ class word
             return number;
         }
 };
-void open_file()
-{
-    string path = __FILE__; //gets source code path, include file name
-	path = path.substr(0, 1 + path.find_last_of('\\')); //removes file name
-	path += "solutii3.txt"; //adds input file to path
-    f = fopen("solutii3.txt","w");    
-}
 word::word()
 {
     x="";
@@ -125,6 +119,7 @@ bool word::good(word a, word b) const
             }
             default:
             {
+                if(x[i]==a.x[i]) return 0;
                 bool ok=0;
                 for(int j=0;j<5;j++)
                     if(x[j]==a.x[i] && j!=i) ok=1;
@@ -150,7 +145,6 @@ void create_database()
         m.push_back(ins);
         full_database.push_back(ins);
     }
-    //printf("%d\n",m.size());
     file1.close();
 }
 word chosen_word;
@@ -173,11 +167,8 @@ int random()
 }
 void get_word()
 {
-    map<word,bool>::iterator it;
     int pos = random();
     chosen_word = m[pos];
-    //word aj("LEVIT");
-    //chosen_word=aj;
 }
 bool find(word a)
 {

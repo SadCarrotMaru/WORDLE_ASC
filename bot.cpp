@@ -1,14 +1,16 @@
-#include"player.cpp"
+#include"structures.cpp"
+#include<fcntl.h>
+#include<stdlib.h>
+#include<unistd.h>
 using namespace std;
 word currentword;
 word savedword("TAREI");
-double ENTROPY,MAXENTROPY=0,SUM=0;
-const double eps=0.e-14;
-int countg;
+double ENTROPY,MAXENTROPY=0;
+bool doit=1;
 map<word,bool>vizitat;
+vector<word>answers;
 void update_database()
 {
-    // TRANSMIT SAVEDWORD TO PY INTERFACE TO TEST IT
     word feedback;
     feedback = chosen_word * savedword;
     vector<word>m2;
@@ -26,7 +28,6 @@ void do_entropy()
     int frecv[250];
     for(int i=0;i<=243;i++)
         frecv[i]=0;
-    // B - > 1, Y -> 2, G -> 3- > 31311
     int count=0,number;
     for(auto &x: m)
     {
@@ -47,26 +48,31 @@ void do_entropy()
         }
     }
 }
-void chosen_word_by_bot(word choice)
+void chosen_word_by_bot()
 {
     vizitat.insert(make_pair(savedword,1));
+    if(doit==0) savedword.print();
     update_database();
-    countg++;
-    choice.print();
-    cout << "(" << MAXENTROPY <<", "<<m.size()<< "), ";
-    //af << ", ";
-    // TRANSMIT WORD TO BOT
-
 }
 void start_game_bot()
 {
-    //debug();
+    m = full_database;
     vizitat.clear();
-    savedword.x = "TAREI";
-    countg = 0;
-    chosen_word.print();
-    cout << "  -->  ";
-    chosen_word_by_bot(savedword);
+    if(answers.size()>0)
+    {
+        for(int i=0;i<answers.size();i++)
+        {
+            savedword=answers[i];
+            chosen_word_by_bot();
+        }
+        doit = 0;
+    }
+        else
+        {
+            doit = 0;
+            savedword.x = "TAREI";
+            chosen_word_by_bot();
+        }
     while(m.size())
     {
         bool ok = false;
@@ -75,7 +81,6 @@ void start_game_bot()
         savedword = m.front();
         do_entropy();
         MAXENTROPY=ENTROPY;
-        cout<< "~~~" << MAXENTROPY << "~~~";
         for(auto &y : full_database)
         {
             if(vizitat.find(y)==vizitat.end())
@@ -89,10 +94,35 @@ void start_game_bot()
                 }
               }
         }
-        chosen_word_by_bot(savedword);
+        chosen_word_by_bot();
     }
-    cout << countg << '\n';
-    //printf("%d \n",countg);
-    SUM += countg;
-    //af.close();
+}
+int main()
+{
+    create_database();
+    string path2, path = __FILE__; //gets source code path, include file name
+	path = path.substr(0, 1 + path.find_last_of('\\')); //removes file name
+    path2 = path + "/tmp/file2.txt";
+    path += "/tmp/file1.txt";
+    string s;
+    freopen(path.c_str(),"r",stdin);
+    freopen(path2.c_str(),"w",stdout);
+    getline(cin,s);
+    word aj;
+    chosen_word.x="";
+    for(int i=0;i<s.size();i++)
+    {
+        aj.x +=s[i];
+        if(aj.x.size()==5)
+        {
+            if(chosen_word.x=="") chosen_word=aj;
+                else answers.push_back(aj);
+            aj.x="";
+        }   
+    }
+    start_game_bot();
+    for(int i=1;i<=count1;i++)
+        cout<<answers_by_bot[i];
+    // Make vector
+    return 0;
 }
