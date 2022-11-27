@@ -3,6 +3,7 @@ import pyautogui
 import sys          # ca sa inchidem procesul
 import random       # sa genereze cuvant random
 import os
+import time
 #from words import * # lista lui de cuvinte, o modificam noi cand combinam
 pygame.init()       # initializezi aplicatia
 # Constants
@@ -27,7 +28,7 @@ FILLED_OUTLINE = "#000000"
 
 
 # ruleaza pt cuvantul coder prima data ( facut asa pt teste)
-CORRECT_WORD = "VERDE"
+CORRECT_WORD = ""
 
 # literele afisate pe tastatura
 ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
@@ -196,13 +197,14 @@ def play_again():
 
 def reset():
     # Resets all global variables to their default states.
-    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result, current_letter_bg_x
+    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result, current_letter_bg_x, all_guesses
     SCREEN.fill("white")
     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
     guesses_count = 0
     CORRECT_WORD = random.choice(WORDS)
     guesses = [[] for _ in range(6)] 
     current_guess = []
+    all_guesses = []
     current_guess_string = ""
     game_result = ""
     pygame.display.update()
@@ -215,6 +217,8 @@ def reset():
     indicator_delete = Indicator(518,650,"DEL",83,55)
     indicator_enter.draw(41)
     indicator_delete.draw(41)
+    robot_image = pygame.image.load("robot.jpg")
+    SCREEN.blit(robot_image, (540,215))
     indicator_button_up = Indicator(530,1,"^",70,70)
     indicator_button_down = Indicator(530,406,"v",70,70)
     indicator_button_up.draw(35,35)
@@ -274,6 +278,7 @@ def create_database():
             WORDS.append(line.rstrip(line[-1]))
 
 def init_game():
+    global CORRECT_WORD
     indicator_button_up = Indicator(530,1,"^",70,70)
     indicator_button_down = Indicator(530,406,"v",70,70)
     indicator_button_up.draw(35,35)
@@ -291,6 +296,7 @@ def init_game():
     indicators.append(indicator_button_up)
     indicators.append(indicator_button_down)
     create_database()
+    CORRECT_WORD = random.choice(WORDS)
 
 # SERVER
 
@@ -300,15 +306,22 @@ def robot():
     file  = "file1.txt"
     file2 = "file2.txt"
     with open(os.path.join(directory, file), 'w') as fp:
-        fp.write("ABACA")
+        str=""
+        str+=CORRECT_WORD
+        for guess in all_guesses:
+            for letter in guess:
+                str += letter.text
+        fp.write(str)
+    mypath = os.path.abspath(os.path.dirname(__file__))
+    print(f'"{mypath}/bot.exe"')
+    os.startfile( f'"{mypath}/bot.exe"' )
+    time.sleep(5)
     with open(os.path.join(directory, file2), 'r') as fp:
         line = fp.readline().strip()
         for ch in line:
             create_new_letter(ch)
             if len(current_guess_string) == 5: check_guess(current_guess)
     #execute_cpp
-    os.system("procesu.exe")
-    print("a intrat")
     
 
 

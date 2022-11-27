@@ -13,7 +13,6 @@ class word
             for(int i=0;i<x.size();i++)
                answers_by_bot[++count1]=x[i];
         }
-        word operator + (word b);
         word operator * (word b);
         friend bool operator < (word a, word b)
         {
@@ -49,36 +48,6 @@ word::word()
 word::word(string a)
 {
     x=a;
-}
-word word::operator + (word b)
-{
-    word temp;
-    map<int,int>m_good,m_check;
-    string ans="BBBBB",good_word=x,check_word=b.x;
-    for(int i=0; i<good_word.size(); i++)
-        if(good_word[i]==check_word[i])
-        {
-            ans[i]='G';
-            good_word[i]=check_word[i]='0';
-        }
-    for(int i=0; i<good_word.size(); i++)
-        if(good_word[i]!='0')
-            m_good[good_word[i]]++;
-    for(int i=0; i<check_word.size(); i++)
-        if(check_word[i]!='0')
-            m_check[check_word[i]]++;
-    for(int i=0; i<good_word.size(); i++)
-        if(good_word[i]!='0' && m_good[good_word[i]]>0)
-            for(int j=0; j<check_word.size(); j++)
-                if(ans[j]=='B' && m_good[good_word[i]]>0 && m_check[check_word[j]]>0)
-                    if(good_word[i]==check_word[j])
-                    {
-                        ans[j]='Y';
-                        m_good[good_word[i]]--;
-                        m_check[check_word[j]]--;
-                    }
-    temp.x=ans;
-    return temp;
 }
 word word::operator * (word b)
 {
@@ -148,37 +117,3 @@ void create_database()
     file1.close();
 }
 word chosen_word;
-int random()
-{
-    random_device rd;
-    mt19937::result_type seed = rd() ^ (
-            (mt19937::result_type)
-            chrono::duration_cast<chrono::seconds>(
-                chrono::system_clock::now().time_since_epoch()
-                ).count() +
-            (mt19937::result_type)
-            chrono::duration_cast<chrono::microseconds>(
-                chrono::high_resolution_clock::now().time_since_epoch()
-                ).count() );
-
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<unsigned> distrib(0, m.size());
-    return distrib(gen);
-}
-void get_word()
-{
-    int pos = random();
-    chosen_word = m[pos];
-}
-bool find(word a)
-{
-    int st=0,dr=m.size()-1;
-    while(st<=dr)
-    {
-        int med=(st+dr)>>1;
-        if(m[med]==a) return 1;
-            else if(m[med].x<a.x) st=med+1;
-                else dr=med-1;
-    }
-    return 0;
-}

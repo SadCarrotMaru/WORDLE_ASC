@@ -123,6 +123,7 @@ int main()
     start_game_bot();
     for(int i=1;i<=count1;i++)
         cout<<answers_by_bot[i];
+    cout<<1;
     // Make vector
     return 0;
 }
