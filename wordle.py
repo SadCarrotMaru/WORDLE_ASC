@@ -198,7 +198,7 @@ def play_again():
 
 def reset():
     # Resets all global variables to their default states.
-    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result, current_letter_bg_x, all_guesses
+    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result, current_letter_bg_x, all_guesses, start_ind_scroll
     SCREEN.fill("white")
     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
     guesses_count = 0
@@ -206,6 +206,7 @@ def reset():
     guesses = [[] for _ in range(6)] 
     current_guess = []
     all_guesses = []
+    start_ind_scroll = 0
     current_guess_string = ""
     game_result = ""
     pygame.display.update()
