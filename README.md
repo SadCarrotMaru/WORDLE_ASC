@@ -5,15 +5,16 @@ Membrii echipă: <br />
   ~ Pîrvulescu Daria Maria  <br />
   ~ Buzatu Giulian  <br />
 Medie încercări: 4.00786  <br />
+Pentru a juca, se executa wordle.py. <br />
 
 Conținut proiect: <br />
   Proiectul nostru contine 2 programe principale:   <br />
-    O: wordle.py care este jocul wordle principal si contine: <br />
+    ⬤ wordle.py care este jocul wordle principal si contine: <br />
             ~ interfata <br />
             ~ user_input (atat de la tastatura, cat si de la mouse) <br />
             ~ sageti pentru deplasarea prin cuvintele incercate <br />
-            ~ multi-threading (pentru a rula programul de a calcula cele mai bune cuvinte pentru a castiga jocul, programele comunica prin 2 fisiere situatie in folderul tmp) <br />
-    O: bot.exe care este calculatorul de entropie, el are inclus in el structures.cpp pentru a fi mai vizibil codul in timpul lucrului in echipa: <br />
+            ~ multi-threading (pentru a rula programul de a calcula cele mai bune cuvinte pentru a castiga jocul, programele comunica prin 2 fisiere situate in folderul tmp) <br />
+    ⬤ bot.exe care este calculatorul de entropie, avand inclus in el structures.cpp pentru a fi mai vizibil codul in timpul lucrului in echipa: <br />
             ~ pentru calculul entropiei, retinem doua structuri, m si full_database. (m este lista care contine cuvintele care inca pot fi castigatoare, iar full_database contine toate cuvintele din fisier) <br />
             ~ pentru fiecare cuvant din full_database calculam entropia (deoarece un cuvant care nu poate fi castigator poate avea o entropie mai mare), folosindu-ne de configuratiile care rezulta daca ele ar fi jucate <br />
 
